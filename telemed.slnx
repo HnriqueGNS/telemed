@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/telemed.Api/telemed.Api.csproj" />
+    <Project Path="src/telemed.Application/telemed.Application.csproj" />
+    <Project Path="src/telemed.Domain/telemed.Domain.csproj" />
+    <Project Path="src/telemed.Infrastructure/telemed.Infrastructure.csproj" />
+  </Folder>
+</Solution>
