@@ -63,8 +63,6 @@ npm install
 npm run dev
 ```
 
-> As credenciais em `docker-compose.yml` são **apenas para desenvolvimento local**. Nunca use esses valores em outros ambientes.
-
 ## Roadmap
 
 - [x] **Etapa 1:** fundação (solução .NET, PostgreSQL, Identity, perfis, entidades base, multi-clínica)
@@ -89,7 +87,7 @@ Este software é fornecido como base técnica e **não garante, por si só, conf
 
 ## Segurança
 
-Encontrou uma vulnerabilidade? colabore com correções e deixe sua sugestão! e-mail: henrique.cric@gmail.cim
+Encontrou uma vulnerabilidade? colabore com correções e deixe sua sugestão! e-mail: henrique.cric@gmail.com
 
 ## Contribuindo
 
