@@ -483,3 +483,6 @@ $RECYCLE.BIN/
 
 # Docker files
 docker-compose.yml
+.env
+
+!docker-compose.yml
