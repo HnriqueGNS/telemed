@@ -2,8 +2,6 @@
 
 Plataforma de telemedicina em desenvolvimento, construída com foco em privacidade e proteção de dados de saúde conforme a **LGPD** (Lei nº 13.709/2018).
 
-> **Status: em desenvolvimento inicial.** Ainda não está pronta para uso em produção nem para o tratamento de dados reais de pacientes.
-
 ## Objetivo
 
 Oferecer uma base sólida para clínicas e profissionais de saúde com:
@@ -91,12 +89,8 @@ Este software é fornecido como base técnica e **não garante, por si só, conf
 
 ## Segurança
 
-Encontrou uma vulnerabilidade? **Não abra uma issue pública.** Entre em contato diretamente pelo e-mail: `seu@email.com`.
+Encontrou uma vulnerabilidade? colabore com correções e deixe sua sugestão! e-mail: henrique.cric@gmail.cim
 
 ## Contribuindo
 
-Contribuições são bem-vindas depois que a base estiver estável. Por enquanto, abra uma issue para discutir ideias antes de enviar um pull request.
-
-## Licença
-
-Defina a licença antes de publicar (por exemplo, MIT ou Apache-2.0) e adicione o arquivo `LICENSE` na raiz. Sem licença, o código é público para leitura, mas ninguém tem permissão legal para usá-lo.
+Contribuições são bem-vindas! lembrando que é um projeto público disponível para todos
