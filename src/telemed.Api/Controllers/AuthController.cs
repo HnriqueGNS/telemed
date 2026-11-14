@@ -45,17 +45,25 @@ public class AuthController(
     {
         var user = await users.FindByEmailAsync(req.Email);
         if (user is null || !user.IsActive)
+        {
             return Unauthorized(new { error = "Credenciais inválidas." });
-
+        }
         var result = await signIn.PasswordSignInAsync(
             user, req.Password, isPersistent: false, lockoutOnFailure: true);
 
-        if (result.Succeeded) return Ok(new { requiresTwoFactor = false });
-        if (result.RequiresTwoFactor) return Ok(new { requiresTwoFactor = true });
+        if (result.Succeeded)
+        {
+            return Ok(new { requiresTwoFactor = false });
+        }
+        if (result.RequiresTwoFactor)
+        {
+             return Ok(new { requiresTwoFactor = true });
+        }
         if (result.IsLockedOut)
+        {  
             return StatusCode(StatusCodes.Status423Locked,
                 new { error = "Conta temporariamente bloqueada. Tente mais tarde." });
-
+        }
         return Unauthorized(new { error = "Credenciais inválidas." });
     }
 
