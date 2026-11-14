@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using telemed.Api.Services;
 using telemed.Application.Abstractions;
+using telemed.Domain.Entities;
 using telemed.Infrastructure.Identity;
 using telemed.Infrastructure.Persistence;
 
@@ -27,18 +30,33 @@ builder.Services
         o.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddClaimsPrincipalFactory<AppClaimsPrincipalFactory>();
 
 builder.Services.ConfigureApplicationCookie(o =>
 {
+    o.Cookie.Name = "telemed.auth";
     o.Cookie.HttpOnly = true;
-    o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    o.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+        ? CookieSecurePolicy.SameAsRequest
+        : CookieSecurePolicy.Always;
     o.Cookie.SameSite = SameSiteMode.Strict;
     o.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     o.SlidingExpiration = true;
-    // API: devolve status code em vez de redirecionar
     o.Events.OnRedirectToLogin = ctx => { ctx.Response.StatusCode = 401; return Task.CompletedTask; };
     o.Events.OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = 403; return Task.CompletedTask; };
+});
+
+builder.Services.AddRateLimiter(o =>
+{
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    o.AddPolicy("auth", http => RateLimitPartition.GetFixedWindowLimiter(
+        http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1)
+        }));
 });
 
 builder.Services.AddAuthorization();
@@ -51,19 +69,30 @@ builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
 
 var app = builder.Build();
 
-// Cria os perfis na primeira execução
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     foreach (var role in Roles.All)
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+
+    if (app.Environment.IsDevelopment())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var demoId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        if (!await db.Clinics.AnyAsync(c => c.Id == demoId))
+        {
+            db.Clinics.Add(new Clinic { Id = demoId, Name = "Clínica Demo" });
+            await db.SaveChangesAsync();
+        }
+    }
 }
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
+else app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
 app.UseCors();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
