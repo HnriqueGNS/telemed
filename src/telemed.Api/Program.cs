@@ -59,7 +59,12 @@ builder.Services.AddRateLimiter(o =>
         }));
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(o => o.AddPolicy(SecurityPolicies.ClinicalAccess, p => p
+    .RequireAuthenticatedUser()
+    .RequireAssertion(ctx =>
+        !SecurityPolicies.TwoFactorRoles.Any(ctx.User.IsInRole)
+        || ctx.User.HasClaim("two_factor", "true"))));
+        
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 

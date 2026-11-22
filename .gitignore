@@ -486,3 +486,5 @@ docker-compose.yml
 .env
 
 !docker-compose.yml
+CLAUDE.md
+CLAUDE..md

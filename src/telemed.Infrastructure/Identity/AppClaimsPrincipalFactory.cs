@@ -18,6 +18,7 @@ public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationU
         if(user.ClinicId is {} clinicId)
         {
             identity.AddClaim(new Claim("clinic_id", clinicId.ToString()));
+            identity.AddClaim(new Claim("two_factor", user.TwoFactorEnabled ? "true" : "false"));
         }
         return identity;
     }
