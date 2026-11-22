@@ -66,7 +66,7 @@ npm run dev
 ## Roadmap
 
 - [x] **Etapa 1:** fundação (solução .NET, PostgreSQL, Identity, perfis, entidades base, multi-clínica)
-- [ ] **Etapa 2:** registro/login, 2FA, criptografia de campos sensíveis, auditoria e consentimento
+- [x] **Etapa 2:** registro/login, 2FA, criptografia de campos sensíveis, auditoria e consentimento
 - [ ] **Etapa 3:** cadastros de pacientes, médicos e clínica
 - [ ] **Etapa 4:** agenda e agendamento com lembretes
 - [ ] **Etapa 5:** teleconsulta por vídeo
