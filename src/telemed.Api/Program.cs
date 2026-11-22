@@ -8,6 +8,7 @@ using telemed.Application.Abstractions;
 using telemed.Domain.Entities;
 using telemed.Infrastructure.Identity;
 using telemed.Infrastructure.Persistence;
+using telemed.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,11 @@ builder.Host.UseSerilog((ctx, cfg) => cfg
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+builder.Services.Configure<EncryptionOptions>(
+    builder.Configuration.GetSection(EncryptionOptions.Section));
+
+builder.Services.AddSingleton<IFieldEncryptor, AesGcmFieldEncryptor>();
 
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
@@ -73,6 +79,7 @@ builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
     .AllowCredentials().AllowAnyHeader().AllowAnyMethod()));
 
 var app = builder.Build();
+app.Services.GetRequiredService<IFieldEncryptor>();
 
 using (var scope = app.Services.CreateScope())
 {

@@ -264,6 +264,10 @@ namespace telemed.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("CpfHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -280,6 +284,9 @@ namespace telemed.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.HasIndex("ClinicId", "CpfHash")
                         .IsUnique();
 
                     b.ToTable("Patients");

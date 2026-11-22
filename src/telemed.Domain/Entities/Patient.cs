@@ -8,7 +8,8 @@ public class Patient : ITenantEntity
     public Guid ClinicId { get; set; }
     public Guid UserId { get; set; }
     public string FullName { get; set; }
-    public string Cpf { get; set; } = default;
+    public string Cpf { get; set; } = default!;
+    public string CpfHash { get; set; } = default!;
     public DateOnly BirthDate { get; set; }
     public string? Phone { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
